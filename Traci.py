@@ -2,6 +2,8 @@
 import os # Module provides functions to handle file paths, directories, environment variables
 import sys # Module provides access to Python-specific system parameters and functions
 
+# Go through the J_Edits_<number> comments to see which of the steps & segments can be changed others keep unchanged...J_Edit_1
+
 # Step 2: Establish path to SUMO (SUMO_HOME)
 if 'SUMO_HOME' in os.environ:
     tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
@@ -15,7 +17,7 @@ import traci # Static network information (such as reading and analyzing network
 # Step 4: Define Sumo configuration
 Sumo_config = [
     'sumo-gui',
-    '-c', 'Traci.sumocfg',
+    '-c', 'Test6.sumocfg', # FORMER: 'Traci.sumocfg' ; NOW: 'Test6.sumocfg' . J_Edit_2
     '--step-length', '0.05',
     '--delay', '1000',
     '--lateral-resolution', '0.1'
@@ -24,6 +26,8 @@ Sumo_config = [
 # Step 5: Open connection between SUMO and Traci
 traci.start(Sumo_config)
 
+# APART FROM FILENAME CHANGE AT LINE-18, ONLY STEP 6 & 7 NEED CHANGES TO USE TRACI..KEEP OTHERS UNCHANGED...J_Edit_3
+
 # Step 6: Define Variables
 vehicle_speed = 0
 total_speed = 0
@@ -31,14 +35,14 @@ total_speed = 0
 # Step 7: Define Functions
 
 # Step 8: Take simulation steps until there are no more vehicles in the network
-while traci.simulation.getMinExpectedNumber() > 0:
-    traci.simulationStep() # Move simulation forward 1 step
+while traci.simulation.getMinExpectedNumber() > 0:                                   # Don't change this line...J_Edit_4
+    traci.simulationStep() # Move simulation forward 1 step                          # Don't change this line...J_Edit_5
     # Here you can decide what to do with simulation data at each step
-    if 'veh1' in traci.vehicle.getIDList():
-        vehicle_speed = traci.vehicle.getSpeed('veh1')
-        total_speed = total_speed + vehicle_speed
-    # step_count = step_count + 1
-    print(f"Vehicle speed: {vehicle_speed} m/s")
+    if 'veh1' in traci.vehicle.getIDList():                                          # Any changes do here  
+        vehicle_speed = traci.vehicle.getSpeed('veh1')                               # Any changes do here
+        total_speed = total_speed + vehicle_speed                                    # Any changes do here
+    # step_count = step_count + 1                                                    # Any changes do here
+    print(f"Vehicle speed: {vehicle_speed} m/s")                                     # Any changes do here.....J_Edit_6
 
 # Step 9: Close connection between SUMO and Traci
 traci.close()
