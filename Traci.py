@@ -33,6 +33,7 @@ traci.start(Sumo_config)
 # APART FROM FILENAME CHANGE AT LINE-18, ONLY STEP 6 & 7 NEED CHANGES TO USE TRACI..KEEP OTHERS UNCHANGED...J_Edit_3
 
 # Step 6: Define Variables
+
 vehicle_speed = 0
 total_speed = 0
 
@@ -40,11 +41,14 @@ total_speed = 0
 
 # Define a function to get the speed of a vehicle by its ID ...................................................J_Edit_8
 def update_speed():
+    global vehicle_speed
+    global total_speed
     if 'veh1' in traci.vehicle.getIDList():                                          # Any changes do here  
-            vehicle_speed = traci.vehicle.getSpeed('veh1')                               # Any changes do here
-            total_speed = total_speed + vehicle_speed                                    # Any changes do here
-        # step_count = step_count + 1                                                    # Any changes do here
-    print(f"Vehicle speed: {vehicle_speed} m/s")                                     # Any changes do here.....J_Edit_6
+        vehicle_speed = traci.vehicle.getSpeed('veh1')                               # Any changes do here
+        total_speed = total_speed + vehicle_speed                                    # Any changes do here
+# step_count = step_count + 1                                                    # Any changes do here
+        print(f"Vehicle speed: {vehicle_speed} m/s")                                     # Any changes do here.....J_Edit_6
+    print(f"Total speed: {total_speed} m/s")                                               # Any changes do here.....J_Edit_10
 
 # Step 8: Take simulation steps until there are no more vehicles in the network
 while traci.simulation.getMinExpectedNumber() > 0:                                   # Don't change this line...J_Edit_4
