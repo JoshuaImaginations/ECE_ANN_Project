@@ -38,15 +38,19 @@ total_speed = 0
 
 # Step 7: Define Functions
 
+# Define a function to get the speed of a vehicle by its ID ...................................................J_Edit_8
+def update_speed():
+    if 'veh1' in traci.vehicle.getIDList():                                          # Any changes do here  
+            vehicle_speed = traci.vehicle.getSpeed('veh1')                               # Any changes do here
+            total_speed = total_speed + vehicle_speed                                    # Any changes do here
+        # step_count = step_count + 1                                                    # Any changes do here
+    print(f"Vehicle speed: {vehicle_speed} m/s")                                     # Any changes do here.....J_Edit_6
+
 # Step 8: Take simulation steps until there are no more vehicles in the network
 while traci.simulation.getMinExpectedNumber() > 0:                                   # Don't change this line...J_Edit_4
     traci.simulationStep() # Move simulation forward 1 step                          # Don't change this line...J_Edit_5
     # Here you can decide what to do with simulation data at each step
-    if 'veh1' in traci.vehicle.getIDList():                                          # Any changes do here  
-        vehicle_speed = traci.vehicle.getSpeed('veh1')                               # Any changes do here
-        total_speed = total_speed + vehicle_speed                                    # Any changes do here
-    # step_count = step_count + 1                                                    # Any changes do here
-    print(f"Vehicle speed: {vehicle_speed} m/s")                                     # Any changes do here.....J_Edit_6
+    update_speed() # Call the function to update speed at each step............................................J_Edit_9
 
 # Step 9: Close connection between SUMO and Traci
 traci.close()
