@@ -14,14 +14,14 @@ else:
 # Step 3: Add Traci module to provide access to specific libraries and functions
 import traci # Static network information (such as reading and analyzing network files)
 
-# More Settings : For dynamically finding path to sumoconfig files. LOOK J_Edit_2 ::---used Gemini AI by Google. J_Edit_7
-script_dir = os.path.dirname(os.path.abspath(__file__))
-config_path = os.path.join(script_dir, "Test6.sumocfg")
+# More Settings : For dynamically finding path to sumoconfig files. LOOK J_Edit_2 ---used Gemini AI by Google. J_Edit_7
+# script_dir = os.path.dirname(os.path.abspath(__file__))  CHECK YT PLAYLIST
+# config_path = os.path.join(script_dir, "Test6.sumocfg")
 
 # Step 4: Define Sumo configuration
 Sumo_config = [
     'sumo-gui',
-    '-c', config_path, # FORMER: 'Traci.sumocfg' ; NOW: 'Test6.sumocfg' . J_Edit_2
+    '-c', r"C:\Users\JOSHUA\Desktop\ANN_Project\Test6.sumocfg", # FORMER: 'Traci.sumocfg' ; NOW: 'Test6.sumocfg' . J_Edit_2
     '--step-length', '0.05',
     '--delay', '1000',
     '--lateral-resolution', '0.1'
