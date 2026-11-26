@@ -1,9 +1,3 @@
-import os
-import sys
-import random
-import numpy as np
-import matplotlib.pyplot as plt
-#
 # Step 1: Add modules to provide access to specific libraries and functions
 import os  # Module provides functions to handle file paths, directories, environment variables
 import sys  # Module provides access to Python-specific system parameters and functions
@@ -81,7 +75,53 @@ last_switch_step = -MIN_GREEN_STEPS
 # -------------------------
 # Step 7: Define Functions
 # -------------------------
+# Here we define class too.
+#Below is the code for a simple feedforward neural network model for DQN using PyTorch. This model will take the state as input and output Q-values for each action.
+class TrafficDQN(nn.Module):
+    """
+    Feedforward neural network that approximates Q-values in PyTorch.
+    """
+    def __init__(self, state_size, action_size):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(state_size, 24),
+            nn.ReLU(),
+            nn.Linear(24, 24),
+            nn.ReLU(),
+            nn.Linear(24, action_size)
+        )
 
+    def forward(self, x):
+        return self.net(x)
+
+
+def to_tensor(state_tuple):
+    """
+    Convert the state tuple into a 2D PyTorch tensor (shape: [1, state_size]) on `device`.
+    """
+    arr = np.array(state_tuple, dtype=np.float32).reshape((1, -1))
+    return torch.tensor(arr, dtype=torch.float32, device=device)
+
+
+def predict_q_values(state_tuple):
+    """
+    Run forward pass without gradient tracking and return 1D NumPy array of Q-values.
+    """
+    dqn_model.eval()
+    with torch.no_grad():
+        state_t = to_tensor(state_tuple)
+        q_vals = dqn_model(state_t).squeeze(0).cpu().numpy()
+    return q_vals
+
+
+# Create the PyTorch DQN model, optimizer, and loss function
+state_size = 7   # (q_EB_0, q_EB_1, q_EB_2, q_SB_0, q_SB_1, q_SB_2, current_phase)
+action_size = len(ACTIONS)
+dqn_model = TrafficDQN(state_size, action_size).to(device)
+optimizer = optim.Adam(dqn_model.parameters(), lr=0.001)
+criterion = nn.MSELoss()
+# Below is old code for TensorFlow & Keras modules. COMMENTED OUT because of Python Version Compatibility issues. 
+'''
 def build_model(state_size, action_size):
     """
     Build a simple feedforward neural network that approximates Q-values.
@@ -107,7 +147,7 @@ def to_array(state_tuple):
 state_size = 7   # (q_EB_0, q_EB_1, q_EB_2, q_SB_0, q_SB_1, q_SB_2, current_phase)
 action_size = len(ACTIONS)
 dqn_model = build_model(state_size, action_size)
-
+'''
 def get_max_Q_value_of_state(s): #1. Objective Function
     state_array = to_array(s)
     Q_values = dqn_model.predict(state_array, verbose=0)[0]  # shape: (action_size,)
