@@ -4,6 +4,7 @@ import sys  # Module provides access to Python-specific system parameters and fu
 import random
 import numpy as np
 import matplotlib.pyplot as plt  # Visualization
+# matplotlib installed using : " pip install matplotlib" command in terminal.
 # Step 1.1 : (Additional) Imports for Deep Q-Learning...................J_Edit_11
 # # Deep Learning imports (PyTorch + TorchVision)
 import torch
@@ -75,6 +76,9 @@ last_switch_step = -MIN_GREEN_STEPS
 # -------------------------
 # Step 7: Define Functions
 # -------------------------
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu") #  Note: This is changed & corrected by Copilot, to as in TraciNew2 file.
+
 # Here we define class too.
 #Below is the code for a simple feedforward neural network model for DQN using PyTorch. This model will take the state as input and output Q-values for each action.
 class TrafficDQN(nn.Module):
@@ -149,8 +153,7 @@ action_size = len(ACTIONS)
 dqn_model = build_model(state_size, action_size)
 '''
 def get_max_Q_value_of_state(s): #1. Objective Function
-    state_array = to_array(s)
-    Q_values = dqn_model.predict(state_array, verbose=0)[0]  # shape: (action_size,)
+    Q_values = predict_q_values(s)  # shape: (action_size,)        # Note: This is changed & corrected by Copilot, to as in TraciNew2 file. 
     return np.max(Q_values)
 
 def get_reward(state): #2. Constraint 2 
@@ -223,19 +226,19 @@ def update_Q_table(old_state, action, reward, new_state): #6. Constraint 6
     """
     In DQN, we do a single-step gradient update instead of a table update.
     """
-    # 1) Predict current Q-values from old_state (current state)
-    old_state_array = to_array(old_state)
-    Q_values_old = dqn_model.predict(old_state_array, verbose=0)[0]
-    # 2) Predict Q-values for new_state to get max future Q (new state)
-    new_state_array = to_array(new_state)
-    Q_values_new = dqn_model.predict(new_state_array, verbose=0)[0]
-    best_future_q = np.max(Q_values_new)
-        
-    # 3) Incorporate ALPHA to partially update the Q-value
-    Q_values_old[action] = Q_values_old[action] + ALPHA * (reward + GAMMA * best_future_q - Q_values_old[action])
-    
-    # 4) Train (fit) the DQN on this single sample
-    dqn_model.fit(old_state_array, np.array([Q_values_old]), verbose=0)
+    # Predict the best future value, then update the selected action's target.
+    best_future_q = np.max(predict_q_values(new_state))
+    with torch.no_grad():
+        target_q_values = dqn_model(to_tensor(old_state)).squeeze(0).clone()
+        target_q_values[action] += ALPHA * (
+            reward + GAMMA * best_future_q - target_q_values[action].item()
+        )
+
+    optimizer.zero_grad()
+    predicted_q_values = dqn_model(to_tensor(old_state)).squeeze(0)
+    loss = criterion(predicted_q_values, target_q_values)
+    loss.backward()
+    optimizer.step()
 
 def get_action_from_policy(state): #7. Constraint 7
     """
@@ -244,8 +247,7 @@ def get_action_from_policy(state): #7. Constraint 7
     if random.random() < EPSILON:
         return random.choice(ACTIONS)
     else:
-        state_array = to_array(state)
-        Q_values = dqn_model.predict(state_array, verbose=0)[0]
+        Q_values = predict_q_values(state)
         return int(np.argmax(Q_values))
 
 def get_queue_length(detector_id): #8.Constraint 8
@@ -282,11 +284,11 @@ for step in range(TOTAL_STEPS):
     update_Q_table(state, action, reward, new_state)
     
     # Print Q-values for the old_state right after update
-    updated_q_vals = dqn_model.predict(to_array(state), verbose=0)[0]
+    updated_q_vals = predict_q_values(state)
 
     # Record data every 100 steps
     if step % 1 == 0:
-        updated_q_vals = dqn_model.predict(to_array(state), verbose=0)[0]
+        updated_q_vals = predict_q_values(state)
         print(f"Step {step}, Current_State: {state}, Action: {action}, New_State: {new_state}, Reward: {reward:.2f}, Cumulative Reward: {cumulative_reward:.2f}, Q-values(current_state): {updated_q_vals}")
         step_history.append(step)
         reward_history.append(cumulative_reward)
