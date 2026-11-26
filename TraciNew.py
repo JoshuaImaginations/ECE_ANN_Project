@@ -56,7 +56,7 @@ q_SB_2 = 0
 current_phase = 0
 
 # ---- Reinforcement Learning Hyperparameters ----
-TOTAL_STEPS = 9000   # The total number of simulation steps for continuous (online) training.
+TOTAL_STEPS = 50   # The total number of simulation steps for continuous (online) training.
 
 ALPHA = 0.1            # Learning rate (α) between[0, 1]    #If α = 1, you fully replace the old Q-value with the newly computed estimate.
                                                             #If α = 0, you ignore the new estimate and never update the Q-value.
@@ -305,7 +305,7 @@ traci.close()
 # ~~~ Print final model summary (replacing Q-table info) ~~~
 print("\nOnline Training completed.")
 print("DQN Model Summary:")
-dqn_model.summary()
+print(dqn_model)
 
 # -------------------------
 # Visualization of Results
@@ -319,7 +319,8 @@ plt.ylabel("Cumulative Reward")
 plt.title("RL Training (DQN): Cumulative Reward over Steps")
 plt.legend()
 plt.grid(True)
-plt.show()
+plt.savefig("reward_history.png", dpi=150) 
+#plt.show()
 
 # Plot Total Queue Length over Simulation Steps
 plt.figure(figsize=(10, 6))
@@ -329,4 +330,5 @@ plt.ylabel("Total Queue Length")
 plt.title("RL Training (DQN): Queue Length over Steps")
 plt.legend()
 plt.grid(True)
+plt.savefig("queue_length.png", dpi=150)
 plt.show()
