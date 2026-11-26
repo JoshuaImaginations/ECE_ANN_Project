@@ -32,7 +32,7 @@ import traci  # Static network information (such as reading and analyzing networ
 # Step 4: Define Sumo configuration
 Sumo_config = [
     'sumo',
-    '-c', r'"C:\Users\JOSHUA\Desktop\ANN_Project\Test9.sumocfg"',                # Make changes to file pointing. use r"...."
+    '-c', r'C:\Users\JOSHUA\Desktop\ANN_Project\Test9.sumocfg',                # Make changes to file pointing. use r"...."
     '--step-length', '0.10',
     '--delay', '1000',
     '--lateral-resolution', '0'
