@@ -31,11 +31,11 @@ import traci  # Static network information (such as reading and analyzing networ
 
 # Step 4: Define Sumo configuration
 Sumo_config = [
-    'sumo',
+    'sumo-gui',
     '-c', r'C:\Users\JOSHUA\Desktop\ANN_Project\Test9.sumocfg',                # Make changes to file pointing. use r"...."
-    '--step-length', '0.10',
-    '--delay', '1000',
-    '--lateral-resolution', '0'
+    '--step-length', '0.01',
+    '--delay', '0',
+    '--lateral-resolution', '0.1'
 ]
 
 # Step 5: Open connection between SUMO and Traci
@@ -56,7 +56,7 @@ q_SB_2 = 0
 current_phase = 0
 
 # ---- Reinforcement Learning Hyperparameters ----
-TOTAL_STEPS = 10000    # The total number of simulation steps for continuous (online) training.
+TOTAL_STEPS = 9000   # The total number of simulation steps for continuous (online) training.
 
 ALPHA = 0.1            # Learning rate (α) between[0, 1]    #If α = 1, you fully replace the old Q-value with the newly computed estimate.
                                                             #If α = 0, you ignore the new estimate and never update the Q-value.
