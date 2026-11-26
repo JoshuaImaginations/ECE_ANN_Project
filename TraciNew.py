@@ -180,6 +180,7 @@ def get_state():  #3&4. Constraint 3 & 4
     
     # Traffic light ID
     traffic_light_id = "Node2"
+    # In netedit file TLS - ID is changed to "Node2".
     
     # Get queue lengths from each detector
     q_EB_0 = get_queue_length(detector_Node1_2_EB_0)
